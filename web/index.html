@@ -115,22 +115,22 @@
 
 <div id="explainer">
   <div class="row"><p>It's open.</p></div>
-  <div class="row"><p>The Strait of Hormuz has never actually been closed — not once, not for a single day, in modern history.</p></div>
+  <div class="row"><p>The Strait of Hormuz has never actually been closed, not once, not for a single day, in modern history.</p></div>
   <div class="row"><p>Iran has threatened to close it during nearly every regional flare-up since the 1980s Tanker War. Each time, oil spikes on the headline, then gives most of it back within days once no ship is actually stopped.</p></div>
-  <div class="row"><p>The reason is simple: about a fifth of the world's oil and a huge share of its LNG passes through this 21-mile-wide channel. Closing it would cut off Iran's own main export route through the Persian Gulf, provoke a direct U.S. Navy response (the Fifth Fleet is headquartered in Bahrain specifically for this), and instantly turn every regional and global power against Tehran. The threat is valuable exactly because it is never carried out — it moves markets for free.</p></div>
+  <div class="row"><p>The reason is simple: about a fifth of the world's oil and a huge share of its LNG passes through this 21-mile-wide channel. Closing it would cut off Iran's own main export route through the Persian Gulf, provoke a direct U.S. Navy response (the Fifth Fleet is headquartered in Bahrain specifically for this), and instantly turn every regional and global power against Tehran. The threat is valuable exactly because it is never carried out. It moves markets for free.</p></div>
   <div class="row"><p>What actually happens instead: tanker insurance premiums rise, a handful of vessels get boarded, seized, or shadowed near the strait, and traders bid up futures on the risk premium alone. War risk insurance rates and AIS tracking of ships slowing or rerouting near the strait are the real early-warning signals, not the closure itself. Freight rates for VLCCs transiting the Gulf of Oman spike well before any oil actually stops flowing, because underwriters reprice risk instantly while physical cargo takes weeks to reroute.</p></div>
   <div class="row"><p>So the trade is rarely "long oil because Hormuz is closing." It's short the fear premium once the rhetoric peaks and no tanker has actually been stopped, because that premium has reverted to the mean after every single escalation cycle since 1984, and the base rate of an actual sustained closure remains, as of any given week you're reading this, zero.</p></div>
 </div>
 
 <footer>
-  Data: Yahoo Finance (WTI CL=F), delayed. Not financial advice — this is a joke site with a real chart.
+  Data: Yahoo Finance (WTI CL=F), delayed. Not financial advice. This is a joke site with a real chart.
   <br><a href="https://heyitsmejosh.com">heyitsmejosh.com</a>
 </footer>
 
 <script>
 const $ = (s) => document.querySelector(s);
 
-// ponytail: strait has never closed — hardcode true, upgrade to a news/AIS feed if it ever matters
+// ponytail: strait has never closed, hardcode true, upgrade to a news/AIS feed if it ever matters
 const IS_OPEN = true;
 const pill = $("#status-pill");
 pill.textContent = IS_OPEN ? "Open" : "Closed";
@@ -194,11 +194,11 @@ function drawSignal(closes) {
   if (pct >= 0) {
     badge.textContent = "LONG";
     badge.className = "badge long";
-    text.textContent = `Up ${pct.toFixed(1)}% over this window — momentum favors long, but this is trend-following, not a Hormuz call. The strait isn't closed.`;
+    text.textContent = `Up ${pct.toFixed(1)}% over this window. Momentum favors long, but this is trend-following, not a Hormuz call. The strait isn't closed.`;
   } else {
     badge.textContent = "SHORT";
     badge.className = "badge short";
-    text.textContent = `Down ${Math.abs(pct).toFixed(1)}% over this window — momentum favors short. Any Hormuz headline pop without an actual tanker stoppage tends to fade.`;
+    text.textContent = `Down ${Math.abs(pct).toFixed(1)}% over this window. Momentum favors short. Any Hormuz headline pop without an actual tanker stoppage tends to fade.`;
   }
 }
 
