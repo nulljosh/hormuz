@@ -17,10 +17,12 @@
     font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
   header { padding: 40px 20px 10px; text-align: center; }
+  .call { color: var(--sub); font-size: clamp(14px, 2vw, 17px); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
   h1 {
-    font-size: clamp(34px, 7vw, 64px); font-weight: 800; margin: 0 0 8px;
-    letter-spacing: -0.03em; line-height: 1.02;
+    font-size: clamp(40px, 9vw, 84px); font-weight: 800; margin: 0 0 10px;
+    letter-spacing: -0.03em; line-height: 1.0;
   }
+  h1.long { color: var(--open); } h1.short { color: var(--closed); }
   .sub { color: var(--sub); font-size: clamp(15px, 2vw, 18px); font-weight: 500; }
 
   #map-wrap { position: relative; margin: 20px auto 0; max-width: 1000px; padding: 0 16px; }
@@ -81,8 +83,9 @@
 <body>
 
 <header>
-  <h1>Is the Strait of Hormuz Closed?</h1>
-  <div class="sub">Live map, oil prices, and whether you should long or short crude right now.</div>
+  <div class="call" id="call">Should you long or short oil?</div>
+  <h1 id="call-answer">Loading…</h1>
+  <div class="sub" id="call-sub">Live WTI momentum, refreshed every 60s. Strait of Hormuz status and map below.</div>
 </header>
 
 <div id="map-wrap">
@@ -191,14 +194,19 @@ function drawSignal(closes) {
   const first = closes[0], last = closes[closes.length - 1];
   const pct = ((last - first) / first) * 100;
   const badge = $("#signal-badge"), text = $("#signal-text");
+  const answer = $("#call-answer");
   if (pct >= 0) {
     badge.textContent = "LONG";
     badge.className = "badge long";
     text.textContent = `Up ${pct.toFixed(1)}% over this window. Momentum favors long, but this is trend-following, not a Hormuz call. The strait isn't closed.`;
+    answer.textContent = "Long.";
+    answer.className = "long";
   } else {
     badge.textContent = "SHORT";
     badge.className = "badge short";
     text.textContent = `Down ${Math.abs(pct).toFixed(1)}% over this window. Momentum favors short. Any Hormuz headline pop without an actual tanker stoppage tends to fade.`;
+    answer.textContent = "Short.";
+    answer.className = "short";
   }
 }
 
@@ -215,6 +223,12 @@ window.addEventListener("resize", () => {
   const active = document.querySelector(".tabs button.active").dataset.range;
   loadRange(active);
 });
+
+// ponytail: dumb 60s poll, no websocket, the KV cache upstream already throttles Yahoo to 15min
+setInterval(() => {
+  const active = document.querySelector(".tabs button.active").dataset.range;
+  loadRange(active);
+}, 60000);
 
 // scroll density: fade rows in as they enter view
 const rows = document.querySelectorAll("#explainer .row");
