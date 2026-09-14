@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <rect width="200" height="200" rx="40" fill="#0b0d10"/>
+  <path d="M20 130 Q70 100 100 130 T180 130" stroke="#23282e" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <circle cx="100" cy="80" r="10" fill="#2fbf71"/>
+  <text x="100" y="168" font-family="-apple-system, Helvetica, Arial, sans-serif" font-size="22" font-weight="700" fill="#eef1f4" text-anchor="middle">HORMUZ</text>
+</svg>

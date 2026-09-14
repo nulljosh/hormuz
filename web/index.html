@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Is the Strait of Hormuz Closed?</title>
+<meta name="description" content="Live status of the Strait of Hormuz, oil prices, and whether to long or short crude.">
+<style>
+  :root {
+    --bg: #0b0d10; --fg: #eef1f4; --sub: #9aa4ad; --line: #23282e;
+    --open: #2fbf71; --closed: #e6483f; --accent: #eef1f4;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  header { padding: 40px 20px 10px; text-align: center; }
+  h1 {
+    font-size: clamp(34px, 7vw, 64px); font-weight: 800; margin: 0 0 8px;
+    letter-spacing: -0.03em; line-height: 1.02;
+  }
+  .sub { color: var(--sub); font-size: clamp(15px, 2vw, 18px); font-weight: 500; }
+
+  #map-wrap { position: relative; margin: 20px auto 0; max-width: 1000px; padding: 0 16px; }
+  #map { width: 100%; aspect-ratio: 16/9; border: 0; border-radius: 10px; display: block; }
+  .status-pill {
+    position: absolute; top: 16px; left: 32px; z-index: 2;
+    padding: 10px 20px; border-radius: 999px; font-weight: 800; font-size: 15px;
+    letter-spacing: 0.03em; text-transform: uppercase; backdrop-filter: blur(6px);
+    background: color-mix(in srgb, var(--open) 20%, black 70%);
+    color: var(--open); border: 1px solid color-mix(in srgb, var(--open) 50%, transparent);
+  }
+  .status-pill.closed {
+    background: color-mix(in srgb, var(--closed) 20%, black 70%);
+    color: var(--closed); border-color: color-mix(in srgb, var(--closed) 50%, transparent);
+  }
+
+  section.panel { max-width: 1000px; margin: 28px auto; padding: 0 16px; }
+  .card {
+    border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px;
+  }
+  .tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+  .tabs button {
+    background: transparent; border: 1px solid var(--line); color: var(--sub);
+    padding: 6px 14px; border-radius: 999px; font-size: 13px; cursor: pointer;
+  }
+  .tabs button.active { color: var(--fg); border-color: var(--fg); }
+  canvas#chart { width: 100%; height: 280px; }
+  .price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+  .price-row .px { font-size: 44px; font-weight: 800; letter-spacing: -0.02em; }
+  .price-row .delta { font-size: 15px; font-weight: 700; }
+  .delta.up { color: var(--open); } .delta.down { color: var(--closed); }
+
+  .signal { display: flex; align-items: center; gap: 14px; margin-top: 16px; }
+  .signal .badge {
+    font-weight: 800; font-size: 22px; letter-spacing: -0.01em; padding: 10px 22px; border-radius: 8px;
+  }
+  .signal .badge.long { background: color-mix(in srgb, var(--open) 18%, black); color: var(--open); }
+  .signal .badge.short { background: color-mix(in srgb, var(--closed) 18%, black); color: var(--closed); }
+  .signal p { margin: 0; color: var(--sub); font-size: 13px; max-width: 60ch; }
+
+  /* scroll-density explainer, optometrist-chart style */
+  #explainer { max-width: 700px; margin: 60px auto 120px; padding: 0 20px; }
+  #explainer .row {
+    padding: 40px 0; text-align: center; transition: opacity 0.3s;
+  }
+  #explainer .row p { margin: 0; letter-spacing: 0.01em; }
+  #explainer .row:nth-child(1) p { font-size: clamp(38px, 6vw, 52px); font-weight: 800; letter-spacing: -0.02em; }
+  #explainer .row:nth-child(2) p { font-size: 26px; font-weight: 600; line-height: 1.4; }
+  #explainer .row:nth-child(3) p { font-size: 20px; font-weight: 500; line-height: 1.5; text-align: left; }
+  #explainer .row:nth-child(4) p { font-size: 16px; font-weight: 400; line-height: 1.6; text-align: left; color: var(--fg); }
+  #explainer .row:nth-child(5) p { font-size: 13px; font-weight: 400; line-height: 1.7; text-align: left; color: var(--sub); }
+  #explainer .row:nth-child(6) p { font-size: 11px; font-weight: 400; line-height: 1.8; text-align: left; color: #6b747c; letter-spacing: -0.005em; }
+
+  footer { text-align: center; color: var(--sub); font-size: 12px; padding: 30px 16px 50px; }
+  a { color: inherit; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Is the Strait of Hormuz Closed?</h1>
+  <div class="sub">Live map, oil prices, and whether you should long or short crude right now.</div>
+</header>
+
+<div id="map-wrap">
+  <div class="status-pill" id="status-pill">checking…</div>
+  <iframe id="map" loading="lazy"
+    src="https://www.google.com/maps?q=26.5667,56.25&z=8&output=embed"
+    referrerpolicy="no-referrer-when-downgrade"></iframe>
+</div>
+
+<section class="panel">
+  <div class="card">
+    <div class="price-row">
+      <span class="sub">WTI Crude</span>
+      <span class="px" id="px">—</span>
+      <span class="delta" id="delta">—</span>
+    </div>
+    <div class="tabs">
+      <button data-range="5d" class="active">Daily</button>
+      <button data-range="1mo">Monthly</button>
+      <button data-range="1y">Yearly</button>
+    </div>
+    <canvas id="chart"></canvas>
+
+    <div class="signal">
+      <span class="badge" id="signal-badge">—</span>
+      <p id="signal-text">Loading trend…</p>
+    </div>
+  </div>
+</section>
+
+<div id="explainer">
+  <div class="row"><p>It's open.</p></div>
+  <div class="row"><p>The Strait of Hormuz has never actually been closed — not once, not for a single day, in modern history.</p></div>
+  <div class="row"><p>Iran has threatened to close it during nearly every regional flare-up since the 1980s Tanker War. Each time, oil spikes on the headline, then gives most of it back within days once no ship is actually stopped.</p></div>
+  <div class="row"><p>The reason is simple: about a fifth of the world's oil and a huge share of its LNG passes through this 21-mile-wide channel. Closing it would cut off Iran's own main export route through the Persian Gulf, provoke a direct U.S. Navy response (the Fifth Fleet is headquartered in Bahrain specifically for this), and instantly turn every regional and global power against Tehran. The threat is valuable exactly because it is never carried out — it moves markets for free.</p></div>
+  <div class="row"><p>What actually happens instead: tanker insurance premiums rise, a handful of vessels get boarded, seized, or shadowed near the strait, and traders bid up futures on the risk premium alone. War risk insurance rates and AIS tracking of ships slowing or rerouting near the strait are the real early-warning signals, not the closure itself. Freight rates for VLCCs transiting the Gulf of Oman spike well before any oil actually stops flowing, because underwriters reprice risk instantly while physical cargo takes weeks to reroute.</p></div>
+  <div class="row"><p>So the trade is rarely "long oil because Hormuz is closing." It's short the fear premium once the rhetoric peaks and no tanker has actually been stopped, because that premium has reverted to the mean after every single escalation cycle since 1984, and the base rate of an actual sustained closure remains, as of any given week you're reading this, zero.</p></div>
+</div>
+
+<footer>
+  Data: Yahoo Finance (WTI CL=F), delayed. Not financial advice — this is a joke site with a real chart.
+  <br><a href="https://heyitsmejosh.com">heyitsmejosh.com</a>
+</footer>
+
+<script>
+const $ = (s) => document.querySelector(s);
+
+// ponytail: strait has never closed — hardcode true, upgrade to a news/AIS feed if it ever matters
+const IS_OPEN = true;
+const pill = $("#status-pill");
+pill.textContent = IS_OPEN ? "Open" : "Closed";
+pill.classList.toggle("closed", !IS_OPEN);
+
+let chart;
+async function loadRange(range) {
+  const res = await fetch(`/api/oil?range=${range}`);
+  const data = await res.json();
+  const closes = data.closes.filter((v) => v != null);
+  const labels = data.timestamps
+    .filter((_, i) => data.closes[i] != null)
+    .map((t) => new Date(t * 1000));
+
+  $("#px").textContent = "$" + data.price.toFixed(2);
+  const chg = data.price - data.prevClose;
+  const pct = (chg / data.prevClose) * 100;
+  const d = $("#delta");
+  d.textContent = `${chg >= 0 ? "+" : ""}${chg.toFixed(2)} (${pct.toFixed(2)}%)`;
+  d.className = "delta " + (chg >= 0 ? "up" : "down");
+
+  drawChart(labels, closes);
+  drawSignal(closes);
+}
+
+function drawChart(labels, closes) {
+  const c = $("#chart");
+  const ctx = c.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+  const w = c.clientWidth, h = 280;
+  c.width = w * dpr; c.height = h * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+
+  const min = Math.min(...closes), max = Math.max(...closes);
+  const pad = 20;
+  const x = (i) => pad + (i / (closes.length - 1)) * (w - pad * 2);
+  const y = (v) => h - pad - ((v - min) / (max - min || 1)) * (h - pad * 2);
+
+  ctx.beginPath();
+  closes.forEach((v, i) => (i === 0 ? ctx.moveTo(x(i), y(v)) : ctx.lineTo(x(i), y(v))));
+  ctx.strokeStyle = closes[closes.length - 1] >= closes[0] ? "#2fbf71" : "#e6483f";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.lineTo(x(closes.length - 1), h - pad);
+  ctx.lineTo(x(0), h - pad);
+  ctx.closePath();
+  const grad = ctx.createLinearGradient(0, 0, 0, h);
+  const col = closes[closes.length - 1] >= closes[0] ? "47,191,113" : "230,72,63";
+  grad.addColorStop(0, `rgba(${col},0.18)`);
+  grad.addColorStop(1, `rgba(${col},0)`);
+  ctx.fillStyle = grad;
+  ctx.fill();
+}
+
+function drawSignal(closes) {
+  const first = closes[0], last = closes[closes.length - 1];
+  const pct = ((last - first) / first) * 100;
+  const badge = $("#signal-badge"), text = $("#signal-text");
+  if (pct >= 0) {
+    badge.textContent = "LONG";
+    badge.className = "badge long";
+    text.textContent = `Up ${pct.toFixed(1)}% over this window — momentum favors long, but this is trend-following, not a Hormuz call. The strait isn't closed.`;
+  } else {
+    badge.textContent = "SHORT";
+    badge.className = "badge short";
+    text.textContent = `Down ${Math.abs(pct).toFixed(1)}% over this window — momentum favors short. Any Hormuz headline pop without an actual tanker stoppage tends to fade.`;
+  }
+}
+
+document.querySelectorAll(".tabs button").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+    loadRange(btn.dataset.range);
+  });
+});
+
+loadRange("5d");
+window.addEventListener("resize", () => {
+  const active = document.querySelector(".tabs button.active").dataset.range;
+  loadRange(active);
+});
+
+// scroll density: fade rows in as they enter view
+const rows = document.querySelectorAll("#explainer .row");
+rows.forEach((r) => (r.style.opacity = "0.35"));
+const io = new IntersectionObserver(
+  (entries) => entries.forEach((e) => { e.target.style.opacity = e.isIntersecting ? "1" : "0.35"; }),
+  { threshold: 0.5 }
+);
+rows.forEach((r) => io.observe(r));
+</script>
+</body>
+</html>
