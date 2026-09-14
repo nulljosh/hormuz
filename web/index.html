@@ -16,19 +16,32 @@
     margin: 0; background: var(--bg); color: var(--fg);
     font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
-  header { padding: 40px 20px 10px; text-align: center; }
+  /* map fills the whole viewport as a fixed backdrop; everything else floats on glass above it */
+  #map {
+    position: fixed; inset: 0; width: 100vw; height: 100vh; border: 0; z-index: -1;
+    filter: saturate(0.7) brightness(0.55);
+  }
+  #map-scrim { position: fixed; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(5,7,9,0.55), rgba(5,7,9,0.75) 40%, rgba(5,7,9,0.92)); }
+
+  .glass {
+    background: color-mix(in srgb, var(--bg) 55%, transparent);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+  }
+
+  header.glass { max-width: 760px; margin: 40px auto 0; padding: 28px 28px 22px; text-align: center; }
   .call { color: var(--sub); font-size: clamp(14px, 2vw, 17px); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
   h1 {
     font-size: clamp(40px, 9vw, 84px); font-weight: 800; margin: 0 0 10px;
-    letter-spacing: -0.03em; line-height: 1.0;
+    letter-spacing: -0.03em; line-height: 1.0; text-shadow: 0 2px 20px rgba(0,0,0,0.4);
   }
   h1.long { color: var(--open); } h1.short { color: var(--closed); }
   .sub { color: var(--sub); font-size: clamp(15px, 2vw, 18px); font-weight: 500; }
 
-  #map-wrap { position: relative; margin: 20px auto 0; max-width: 1000px; padding: 0 16px; }
-  #map { width: 100%; aspect-ratio: 16/9; border: 0; border-radius: 10px; display: block; }
   .status-pill {
-    position: absolute; top: 16px; left: 32px; z-index: 2;
+    display: inline-block; margin-top: 14px;
     padding: 10px 20px; border-radius: 999px; font-weight: 800; font-size: 15px;
     letter-spacing: 0.03em; text-transform: uppercase; backdrop-filter: blur(6px);
     background: color-mix(in srgb, var(--open) 20%, black 70%);
@@ -39,10 +52,8 @@
     color: var(--closed); border-color: color-mix(in srgb, var(--closed) 50%, transparent);
   }
 
-  section.panel { max-width: 1000px; margin: 28px auto; padding: 0 16px; }
-  .card {
-    border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px;
-  }
+  section.panel { max-width: 760px; margin: 20px auto 28px; padding: 0 16px; }
+  .card.glass { padding: 22px 24px; }
   .tabs { display: flex; gap: 8px; margin-bottom: 12px; }
   .tabs button {
     background: transparent; border: 1px solid var(--line); color: var(--sub);
@@ -82,21 +93,20 @@
 </head>
 <body>
 
-<header>
+<iframe id="map" loading="lazy"
+  src="https://www.google.com/maps?q=26.5667,56.25&z=8&output=embed"
+  referrerpolicy="no-referrer-when-downgrade"></iframe>
+<div id="map-scrim"></div>
+
+<header class="glass">
   <div class="call" id="call">Should you long or short oil?</div>
   <h1 id="call-answer">Loading…</h1>
-  <div class="sub" id="call-sub">Live WTI momentum, refreshed every 60s. Strait of Hormuz status and map below.</div>
+  <div class="sub" id="call-sub">Live WTI momentum, refreshed every 60s.</div>
+  <div class="status-pill" id="status-pill">checking…</div>
 </header>
 
-<div id="map-wrap">
-  <div class="status-pill" id="status-pill">checking…</div>
-  <iframe id="map" loading="lazy"
-    src="https://www.google.com/maps?q=26.5667,56.25&z=8&output=embed"
-    referrerpolicy="no-referrer-when-downgrade"></iframe>
-</div>
-
 <section class="panel">
-  <div class="card">
+  <div class="card glass">
     <div class="price-row">
       <span class="sub">WTI Crude</span>
       <span class="px" id="px">—</span>
