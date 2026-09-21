@@ -4,8 +4,8 @@
   text { font-family: -apple-system, Helvetica, Arial, sans-serif; fill: var(--ink); }
   line, polyline { stroke: var(--ink); fill: none; }
   .g { stroke-dasharray: 1 4; }
-</style><text x="38" y="11" font-size="10">Lines of real code</text><line x1="38" y1="26" x2="458" y2="26" class="g"/><text x="34" y="29" font-size="9" text-anchor="end">556</text><line x1="38" y1="96" x2="458" y2="96" class="g"/><text x="34" y="99" font-size="9" text-anchor="end">278</text>
+</style><text x="38" y="11" font-size="10">Lines of real code</text><line x1="38" y1="26" x2="458" y2="26" class="g"/><text x="34" y="29" font-size="9" text-anchor="end">558</text><line x1="38" y1="96" x2="458" y2="96" class="g"/><text x="34" y="99" font-size="9" text-anchor="end">279</text>
 <line x1="38" y1="26" x2="38" y2="166"/><line x1="38" y1="166" x2="458" y2="166"/>
-<polyline points="38,109 64,94 90,94 116,90 143,87 169,68 195,64 221,54 248,52 274,48 300,40 326,38 353,35 379,27 405,27 431,26 458,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="38,109 62,94 87,94 112,91 136,88 161,68 186,64 210,55 235,52 260,49 285,40 309,38 334,36 359,28 383,27 408,27 433,27 458,26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
 <text x="38" y="182" font-size="10">Sep 13</text><text x="458" y="182" font-size="10" text-anchor="end">Sep 20</text>
-<text x="38" y="196" font-size="10" font-weight="600">556 lines &#183; 0% documented &#183; 12 commits since Sep 13 2026</text></svg>
+<text x="38" y="196" font-size="10" font-weight="600">558 lines &#183; 42% documented &#183; 13 commits since Sep 13 2026</text></svg>
