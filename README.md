@@ -10,6 +10,8 @@ Hormuz checks. Live map of the strait, live WTI crude price with a daily/monthly
 
 **[hormuz.heyitsmejosh.com →](https://hormuz.heyitsmejosh.com)**
 
+<img src="progress.svg" width="460">
+
 ## Features
 
 - **Live map.** The strait itself, Google Maps embed.
