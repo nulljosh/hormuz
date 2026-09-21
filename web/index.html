@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Is the Strait of Hormuz Closed?</title>
-<meta name="description" content="Live status of the Strait of Hormuz, oil prices, and whether to long or short crude.">
+<meta name="description" content="Is the Strait of Hormuz closed? A live answer from real ship counts, plus WTI crude and a long/short read.">
 <style>
   :root {
     --bg: #0b0d10; --fg: #eef1f4; --sub: #9aa4ad; --line: #23282e;
@@ -112,9 +112,9 @@
 <div id="map-scrim"></div>
 
 <header class="glass">
-  <div class="call" id="call">Should you long or short oil?</div>
+  <div class="call" id="call">Is the Strait of Hormuz closed?</div>
   <h1 id="call-answer">Loading…</h1>
-  <div class="sub" id="call-sub">Live WTI momentum, refreshed every 60s.</div>
+  <div class="sub" id="call-sub">Counting ships, not headlines.</div>
   <div class="status-pill" id="status-pill">checking…</div>
 </header>
 
@@ -167,8 +167,14 @@ async function loadStatus() {
     pill.title = `${st.source}, as of ${st.as_of}`;
     pill.classList.toggle("closed", !isOpen);
     $("#explainer-lede").textContent = isOpen ? "It's open. For now." : "It's closed.";
+    const day = Math.floor((Date.now() - new Date(st.last_closure)) / 864e5);
+    const answer = $("#call-answer");
+    answer.textContent = isOpen ? "No." : `Yes. Day ${day}.`;
+    answer.className = isOpen ? "long" : "short"; // reuses the green/red h1 colors
+    $("#call-sub").textContent = "This site started as a joke that it never closes. Then it closed.";
   } catch {
     pill.textContent = "Status unavailable";
+    $("#call-answer").textContent = "Unknown.";
     $("#explainer-lede").textContent = "Status unavailable.";
   }
 }
@@ -230,19 +236,14 @@ function drawSignal(closes) {
   const first = closes[0], last = closes[closes.length - 1];
   const pct = ((last - first) / first) * 100;
   const badge = $("#signal-badge"), text = $("#signal-text");
-  const answer = $("#call-answer");
   if (pct >= 0) {
     badge.textContent = "LONG";
     badge.className = "badge long";
     text.textContent = `Up ${pct.toFixed(1)}% over this window. Momentum favors long. ${isOpen === false ? "The strait is closed, so the supply risk is real, not just a headline." : "This is trend-following, not a Hormuz call."}`;
-    answer.textContent = "Long.";
-    answer.className = "long";
   } else {
     badge.textContent = "SHORT";
     badge.className = "badge short";
     text.textContent = `Down ${Math.abs(pct).toFixed(1)}% over this window. Momentum favors short. ${isOpen === false ? "The strait is closed, so shorting here is a bet on a reopening." : "Any Hormuz headline pop without an actual tanker stoppage tends to fade."}`;
-    answer.textContent = "Short.";
-    answer.className = "short";
   }
 }
 

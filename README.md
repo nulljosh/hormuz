@@ -4,7 +4,7 @@
 
 ![version](https://img.shields.io/badge/version-v1.0.0-blue) ![license](https://img.shields.io/badge/license-MIT-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fhormuz-black?logo=github)](https://github.com/nulljosh/hormuz)
 
-For forty years, a headline said Iran might close the Strait of Hormuz. Oil spiked. Nobody checked whether a ship had been stopped. Then in February 2026 it actually closed.
+This started as a joke. The Strait of Hormuz never closes, so here is a site that always says open. Then in February 2026 it closed, and the joke was wrong. Now the site counts ships and tells the truth.
 
 Hormuz checks. Live map of the strait, live WTI crude price with a daily/monthly/yearly chart, a long/short momentum read, and the actual answer, computed from real ship counts.
 
