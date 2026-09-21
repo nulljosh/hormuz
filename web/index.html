@@ -266,6 +266,7 @@ window.addEventListener("resize", () => {
 
 // ponytail: dumb 60s poll, no websocket, the KV cache upstream already throttles Yahoo to 15min
 setInterval(() => {
+  loadStatus();
   const active = document.querySelector(".tabs button.active").dataset.range;
   loadRange(active);
 }, 60000);
