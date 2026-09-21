@@ -2,23 +2,24 @@
 
 **v1.0.0** | September 2026
 
-Oil markets move on a headline that's almost never true: that the Strait of
-Hormuz is about to close. It hasn't, not once, not for a day, in the modern
-era. Hormuz exists to put the map, the price, and that fact on one page, so
-the next time the headline runs you can check it in five seconds instead of
-believing it.
+Oil markets move on one headline: the Strait of Hormuz is about to close.
+For forty years it never did. On February 28, 2026 it did. Hormuz puts the
+map, the price, and the real ship count on one page, so you can check the
+headline in five seconds instead of believing it.
 Live at [hormuz.heyitsmejosh.com](https://hormuz.heyitsmejosh.com).
 
 ## The mechanic
 
 A live Google Maps embed centers on the strait itself, 26.5667°N 56.25°E,
 because a status claim about a place should show the place. Next to it, a
-status pill reads open or closed. It's hardcoded open, because it always is;
-the only way this becomes a real detector is a news or AIS feed, which isn't
-worth building until the day it's actually needed.
+status pill reads open or closed. The Worker computes it from IMF PortWatch
+daily transit counts: a 7-day average under 30% of the pre-crisis 85 ships a
+day reads closed. It used to be hardcoded open. That stopped being true.
+PortWatch runs about a week behind, so the pill confirms a closure. It does
+not break the news.
 
 Below that, WTI crude (`CL=F`), fetched from Yahoo Finance's chart API.
-Yahoo sets no CORS header, so the browser can't call it directly — a
+Yahoo sets no CORS header, so the browser can't call it directly, a
 Cloudflare Worker proxies the request server-side and caches the response in
 KV for 15 minutes, which keeps the page fast and keeps Yahoo from seeing
 every visitor's IP. The chart itself is drawn straight to a `<canvas>`, no
@@ -31,11 +32,9 @@ trend-following, not a Hormuz call, and the page says so.
 
 Underneath, a scroll-triggered explainer answers the actual question. Each
 paragraph gets denser and smaller than the last, like an eye chart, because
-the real explanation for "why doesn't it ever close" is genuinely more
-interesting the deeper you go: the threat is more valuable to Iran unfired
-than fired, since firing it would cut off Iran's own export route and pull
-the U.S. Fifth Fleet in directly. War-risk insurance premiums and tanker
-routing are the real signal, months before anything would actually stop.
+the real story gets more interesting the deeper you go: why the threat went
+unfired for forty years, what changed in 2026, and how war-risk insurance
+closes a strait without a blockade line.
 
 ## Design
 
@@ -47,8 +46,8 @@ buried under increasing layers of nuance most headlines skip.
 
 ## Security / Privacy
 
-No accounts, no client-side secrets. The Worker holds no API key — Yahoo's
-chart endpoint is public and keyless. Cached responses in KV carry no
+No accounts, no client-side secrets. The Worker holds no API key, Yahoo's
+chart endpoint and PortWatch's ArcGIS endpoint are both public and keyless. Cached responses in KV carry no
 per-visitor data, only the shared oil-price series.
 
 ## License

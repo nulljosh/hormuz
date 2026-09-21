@@ -4,9 +4,9 @@
 
 ![version](https://img.shields.io/badge/version-v1.0.0-blue) ![license](https://img.shields.io/badge/license-MIT-green) [![GitHub](https://img.shields.io/badge/GitHub-nulljosh%2Fhormuz-black?logo=github)](https://github.com/nulljosh/hormuz)
 
-Every few months, a headline says Iran might close the Strait of Hormuz. Oil spikes. Nobody actually checks whether a ship has been stopped.
+For forty years, a headline said Iran might close the Strait of Hormuz. Oil spiked. Nobody checked whether a ship had been stopped. Then in February 2026 it actually closed.
 
-Hormuz checks. Live map of the strait, live WTI crude price with a daily/monthly/yearly chart, a long/short momentum read, and the actual answer: it's never once closed.
+Hormuz checks. Live map of the strait, live WTI crude price with a daily/monthly/yearly chart, a long/short momentum read, and the actual answer, computed from real ship counts.
 
 **[hormuz.heyitsmejosh.com →](https://hormuz.heyitsmejosh.com)**
 
@@ -15,7 +15,7 @@ Hormuz checks. Live map of the strait, live WTI crude price with a daily/monthly
 ## Features
 
 - **Live map.** The strait itself, Google Maps embed.
-- **Open or closed.** The real answer, not the headline.
+- **Open or closed.** Computed from IMF PortWatch daily transits, not the headline.
 - **Oil price.** WTI crude, daily/monthly/yearly, drawn live.
 - **Long or short.** A momentum read off the chart you're looking at.
 - **The reasoning.** A scroll-down explainer that gets denser the further you read, like an eye chart.

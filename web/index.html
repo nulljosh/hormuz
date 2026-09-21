@@ -122,8 +122,8 @@
   <div class="card glass">
     <div class="price-row">
       <span class="sub">WTI Crude</span>
-      <span class="px" id="px">—</span>
-      <span class="delta" id="delta">—</span>
+      <span class="px" id="px">...</span>
+      <span class="delta" id="delta">...</span>
     </div>
     <div class="tabs" role="group" aria-label="Chart range">
       <button data-range="5d" class="active" aria-pressed="true">Daily</button>
@@ -134,34 +134,44 @@
     <p id="chart-alt" class="sr-only"></p>
 
     <div class="signal">
-      <span class="badge" id="signal-badge">—</span>
+      <span class="badge" id="signal-badge">...</span>
       <p id="signal-text">Loading trend…</p>
     </div>
   </div>
 </section>
 
 <div id="explainer">
-  <div class="row"><p>It's open.</p></div>
-  <div class="row"><p>The Strait of Hormuz has never actually been closed, not once, not for a single day, in modern history.</p></div>
-  <div class="row"><p>Iran has threatened to close it during nearly every regional flare-up since the 1980s Tanker War. Each time, oil spikes on the headline, then gives most of it back within days once no ship is actually stopped.</p></div>
-  <div class="row"><p>The reason is simple: about a fifth of the world's oil and a huge share of its LNG passes through this 21-mile-wide channel. Closing it would cut off Iran's own main export route through the Persian Gulf, provoke a direct U.S. Navy response (the Fifth Fleet is headquartered in Bahrain specifically for this), and instantly turn every regional and global power against Tehran. The threat is valuable exactly because it is never carried out. It moves markets for free.</p></div>
-  <div class="row"><p>What actually happens instead: tanker insurance premiums rise, a handful of vessels get boarded, seized, or shadowed near the strait, and traders bid up futures on the risk premium alone. War risk insurance rates and AIS tracking of ships slowing or rerouting near the strait are the real early-warning signals, not the closure itself. Freight rates for VLCCs transiting the Gulf of Oman spike well before any oil actually stops flowing, because underwriters reprice risk instantly while physical cargo takes weeks to reroute.</p></div>
-  <div class="row"><p>So the trade is rarely "long oil because Hormuz is closing." It's short the fear premium once the rhetoric peaks and no tanker has actually been stopped, because that premium has reverted to the mean after every single escalation cycle since 1984, and the base rate of an actual sustained closure remains, as of any given week you're reading this, zero.</p></div>
+  <div class="row"><p id="explainer-lede">Checking.</p></div>
+  <div class="row"><p>For forty years the answer was always the same. Iran threatened to close the strait in nearly every flare-up since the 1980s Tanker War, and never did. Oil spiked on the headline, then gave it back within days.</p></div>
+  <div class="row"><p>The logic looked airtight. A fifth of the world's oil and a huge share of its LNG squeezes through a 21-mile channel. Closing it cuts off Iran's own exports and invites the U.S. Fifth Fleet, parked in Bahrain for exactly this. The threat was worth more unused.</p></div>
+  <div class="row"><p>Then it happened. On February 28, 2026, after U.S. and Israeli airstrikes, Iran shut the strait to commercial traffic. A ceasefire in April and a memorandum in June reopened it, toll-free, for a few weeks. That deal collapsed in July after attacks on ships. Traffic fell from about 85 transits a day to single digits.</p></div>
+  <div class="row"><p>Nobody needs a blockade line to close a strait. War-risk insurance does it. Premiums ran to roughly forty times normal, carriers suspended the route, and hundreds of ships sat waiting in the Gulf. The Saudi East-West pipeline, the main way around, was knocked out by drones in September.</p></div>
+  <div class="row"><p>So the old trade, short the fear premium because no tanker ever actually stops, is dead while this lasts. The base rate of a real closure is no longer zero. Watch the transit count above. When ships move again, the premium comes out. Until then, the chart is the only honest signal here.</p></div>
 </div>
 
 <footer>
-  Data: Yahoo Finance (WTI CL=F), delayed. Not financial advice. This is a joke site with a real chart.
+  Data: Yahoo Finance (WTI CL=F), delayed. Strait status: IMF PortWatch transit counts, about a week behind. Not financial advice. This is a joke site with a real chart.
   <br><a href="https://heyitsmejosh.com">heyitsmejosh.com</a>
 </footer>
 
 <script>
 const $ = (s) => document.querySelector(s);
 
-// ponytail: strait has never closed, hardcode true, upgrade to a news/AIS feed if it ever matters
-const IS_OPEN = true;
-const pill = $("#status-pill");
-pill.textContent = IS_OPEN ? "Open" : "Closed";
-pill.classList.toggle("closed", !IS_OPEN);
+let isOpen = null; // null until /api/status answers
+async function loadStatus() {
+  const pill = $("#status-pill");
+  try {
+    const st = await (await fetch("/api/status")).json();
+    isOpen = st.open;
+    pill.textContent = `${isOpen ? "Open" : "Closed"} · ${st.transits_per_day} ships/day vs ${st.baseline_per_day} normal`;
+    pill.title = `${st.source}, as of ${st.as_of}`;
+    pill.classList.toggle("closed", !isOpen);
+    $("#explainer-lede").textContent = isOpen ? "It's open. For now." : "It's closed.";
+  } catch {
+    pill.textContent = "Status unavailable";
+    $("#explainer-lede").textContent = "Status unavailable.";
+  }
+}
 
 let chart;
 async function loadRange(range) {
@@ -224,13 +234,13 @@ function drawSignal(closes) {
   if (pct >= 0) {
     badge.textContent = "LONG";
     badge.className = "badge long";
-    text.textContent = `Up ${pct.toFixed(1)}% over this window. Momentum favors long, but this is trend-following, not a Hormuz call. The strait isn't closed.`;
+    text.textContent = `Up ${pct.toFixed(1)}% over this window. Momentum favors long. ${isOpen === false ? "The strait is closed, so the supply risk is real, not just a headline." : "This is trend-following, not a Hormuz call."}`;
     answer.textContent = "Long.";
     answer.className = "long";
   } else {
     badge.textContent = "SHORT";
     badge.className = "badge short";
-    text.textContent = `Down ${Math.abs(pct).toFixed(1)}% over this window. Momentum favors short. Any Hormuz headline pop without an actual tanker stoppage tends to fade.`;
+    text.textContent = `Down ${Math.abs(pct).toFixed(1)}% over this window. Momentum favors short. ${isOpen === false ? "The strait is closed, so shorting here is a bet on a reopening." : "Any Hormuz headline pop without an actual tanker stoppage tends to fade."}`;
     answer.textContent = "Short.";
     answer.className = "short";
   }
@@ -248,7 +258,7 @@ document.querySelectorAll(".tabs button").forEach((btn) => {
   });
 });
 
-loadRange("5d");
+loadStatus().finally(() => loadRange("5d"));
 window.addEventListener("resize", () => {
   const active = document.querySelector(".tabs button.active").dataset.range;
   loadRange(active);
