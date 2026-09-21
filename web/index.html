@@ -18,10 +18,12 @@
   }
   /* map fills the whole viewport as a fixed backdrop; everything else floats on glass above it */
   #map {
-    position: fixed; inset: 0; width: 100vw; height: 100vh; border: 0; z-index: -1;
+    position: fixed; inset: 0; width: 100vw; height: 100vh; border: 0; z-index: 0;
     filter: invert(0.92) hue-rotate(180deg) saturate(0.6) brightness(0.9); /* dark-mode the light Google embed */
   }
-  #map-scrim { position: fixed; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(5,7,9,0.15), rgba(5,7,9,0.45) 50%, rgba(5,7,9,0.8)); }
+  /* z-index 0 not -1: Chrome paints a filtered iframe black behind backdrop-filter glass at negative z */
+  header, section, #explainer, footer { position: relative; z-index: 1; }
+  #map-scrim { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(180deg, rgba(5,7,9,0.15), rgba(5,7,9,0.45) 50%, rgba(5,7,9,0.8)); }
 
   .glass {
     background: color-mix(in srgb, var(--bg) 55%, transparent);
