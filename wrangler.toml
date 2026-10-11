@@ -2,7 +2,7 @@ name = "hormuz"
 main = "worker.js"
 compatibility_date = "2025-07-01"
 workers_dev = true
-routes = [{ pattern = "hormuz.heyitsmejosh.com", custom_domain = true }]
+routes = [{ pattern = "hormuz.heyitsmejosh.com", custom_domain = true }, { pattern = "hormuz.jaybulb.com", custom_domain = true }]
 
 [assets]
 directory = "web"
