@@ -26,7 +26,7 @@ data class Oil(
 
 // Reads the same public endpoints the web app does. No key needed, the
 // Worker holds the Yahoo Finance proxy + cache.
-class HormuzClient(private val baseUrl: String = "https://hormuz.heyitsmejosh.com") {
+class HormuzClient(private val baseUrl: String = "https://hormuz.jaybulb.com") {
     private val http = HttpClient {
         install(ContentNegotiation) { json(Json { ignoreUnknownKeys = true }) }
     }
