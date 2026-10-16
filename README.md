@@ -8,7 +8,7 @@ This started as a joke. The Strait of Hormuz never closes, so here is a site tha
 
 Hormuz checks. Live map of the strait, live WTI crude price with a daily/monthly/yearly chart, a long/short momentum read, and the actual answer, computed from real ship counts.
 
-**[hormuz.heyitsmejosh.com →](https://hormuz.heyitsmejosh.com)**
+**[hormuz.jaybulb.com →](https://hormuz.jaybulb.com)**
 
 <img src="progress.svg" width="460">
 
